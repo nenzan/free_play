@@ -1,52 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:free_play/model.dart';
-import 'package:provider/provider.dart';
+import 'package:free_play/app/app_view.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(Root());
 }
 
-class MyApp extends StatelessWidget {
+class Root extends StatelessWidget {
+  const Root({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<MyModel>(
-      create: (context) => MyModel(),
-      child: MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(
-            title: Text('My App'),
-          ),
-          body: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                color: Colors.green[200],
-                child: Consumer<MyModel>(
-                  builder: (context, myModel, child) {
-                    return ElevatedButton(
-                      onPressed: () {
-                        myModel.doSomething();
-                      },
-                      child: Text('Do something'),
-                    );
-                  },
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(35),
-                color: Colors.blue[200],
-                child: Consumer<MyModel>(
-                  //                    <--- Consumer
-                  builder: (context, myModel, child) {
-                    return Text(myModel.someValue);
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    return MaterialApp(home: App());
   }
 }
