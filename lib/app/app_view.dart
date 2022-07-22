@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:free_play/app/app_vm.dart';
-import 'package:free_play/app/ui/home/home_view.dart';
+import 'package:free_play/app/ui/splash/splash_view.dart';
 import 'package:pmvvm/pmvvm.dart';
 
 class App extends StatelessWidget {
@@ -18,6 +18,6 @@ class _AppView extends StatelessView<AppVm> {
   const _AppView({Key? key}) : super(key: key);
 
   Widget render(context, vm) {
-    return HomeView();
+    return SplashScreen();
   }
 }
