@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:free_play/app/ui/splash/splash_vm.dart';
+import 'package:free_play/core/assets/app_images.dart';
 import 'package:pmvvm/pmvvm.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -20,8 +21,16 @@ class _SplashScreenView extends StatelessView<SplashScreenVm> {
   @override
   Widget render(BuildContext context, SplashScreenVm viewModel) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Free Play"),
+      body: SafeArea(
+        child: Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppImages.imgSplashScreen),
+              fit: BoxFit.fill,
+            ),
+          ),
+        ),
       ),
     );
   }

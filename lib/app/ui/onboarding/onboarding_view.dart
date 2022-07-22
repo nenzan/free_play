@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:free_play/app/ui/onboarding/onboarding_vm.dart';
+import 'package:free_play/app/ui/onboarding/onboarding_widget.dart';
+import 'package:free_play/core/assets/app_images.dart';
+import 'package:free_play/core/style/app_color.dart';
 import 'package:pmvvm/pmvvm.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -23,19 +26,19 @@ class _OnboardingScreenView extends StatelessView<OnboardingVm> {
             PageView(
               onPageChanged: viewModel.onChangedFunction,
               controller: viewModel.pageController,
-              children: <Widget>[
-                Container(
-                    child: OnboardingPlaceholder(
-                        titleOnboarding: "Onboarding 1 Title",
-                        descOnboarding: "Onboarding 1 Description")),
-                Container(
-                    child: OnboardingPlaceholder(
-                        titleOnboarding: "Onboarding 2 Title",
-                        descOnboarding: "Onboarding 3 Description")),
-                Container(
-                    child: OnboardingPlaceholder(
-                        titleOnboarding: "Onboarding 2 Title",
-                        descOnboarding: "Onboarding 3 Description"))
+              children: const <Widget>[
+                OnboardingPlaceholder(
+                    image: AppImages.imgOnboarding,
+                    titleOnboarding: "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
+                    descOnboarding: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book"),
+                OnboardingPlaceholder(
+                    image: AppImages.imgOnboarding,
+                    titleOnboarding: "Onboarding 2 Title",
+                    descOnboarding: "Onboarding 3 Description"),
+                OnboardingPlaceholder(
+                    image: AppImages.imgOnboarding,
+                    titleOnboarding: "Onboarding 2 Title",
+                    descOnboarding: "Onboarding 3 Description")
               ],
             ),
             Positioned(
@@ -49,14 +52,14 @@ class _OnboardingScreenView extends StatelessView<OnboardingVm> {
                     positionIndex: 0,
                     currentIndex: viewModel.currentIndex.value,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Indicator(
                     positionIndex: 1,
                     currentIndex: viewModel.currentIndex.value,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Indicator(
@@ -68,53 +71,6 @@ class _OnboardingScreenView extends StatelessView<OnboardingVm> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class Indicator extends StatelessWidget {
-  final int positionIndex, currentIndex;
-
-  const Indicator({required this.currentIndex, required this.positionIndex});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 12,
-      width: 12,
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue),
-          color:
-              positionIndex == currentIndex ? Colors.blue : Colors.transparent,
-          borderRadius: BorderRadius.circular(100)),
-    );
-  }
-}
-
-class OnboardingPlaceholder extends StatelessWidget {
-  final String titleOnboarding, descOnboarding;
-
-  const OnboardingPlaceholder(
-      {Key? key, required this.titleOnboarding, required this.descOnboarding})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          Image.network('https://picsum.photos/250?image=9'),
-          SizedBox(
-            height: 16,
-          ),
-          Text(titleOnboarding),
-          SizedBox(
-            height: 8,
-          ),
-          Text(descOnboarding)
-        ],
       ),
     );
   }
