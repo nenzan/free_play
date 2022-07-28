@@ -10,6 +10,6 @@ class Root extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: App());
+    return MaterialApp(home: App(), debugShowCheckedModeBanner: false,);
   }
 }

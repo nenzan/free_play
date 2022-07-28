@@ -27,7 +27,7 @@ class _SplashScreenView extends StatelessView<SplashScreenVm> {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage(AppImages.imgSplashScreen),
-              fit: BoxFit.fill,
+              fit: BoxFit.cover,
             ),
           ),
         ),
