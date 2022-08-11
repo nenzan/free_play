@@ -1,13 +1,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:free_play/app/ui/home/data/model/games_list_model.dart';
 import 'package:free_play/app/ui/home/home_vm.dart';
 import 'package:free_play/core/data/enum/view_type_enum.dart';
+import 'package:free_play/core/data/model/setmodellist.dart';
 import 'package:free_play/core/style/app_color.dart';
 import 'package:free_play/core/style/app_values.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pmvvm/pmvvm.dart';
 
-import 'model/image_model.dart';
+import 'data/model/image_model.dart';
 
 final List<String> imgList = [
   'https://gamebrott.com/wp-content/uploads/2020/02/Diablo-Immortal-image-696x344-1.jpg',
@@ -47,65 +49,8 @@ class HomeScreen extends StatelessWidget {
 
 class _HomeScreenView extends StatelessView<HomeVm> {
   int _crossAxisCount = 2;
-
   double _aspectRatio = 1.5;
-
   ViewType _viewType = ViewType.grid;
-
-  List<ImageData> itemList = getImageDataList();
-
-  static List<ImageData> getImageDataList() {
-    return [
-      ImageData(
-          'https://images.unsplash.com/photo-1467733037332-340204cb229b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=875&q=80',
-          'Shinny Sunflower',
-          '01-Jan-2022'),
-      ImageData(
-          'https://images.unsplash.com/photo-1432316212565-b26e2a381ada?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=875&q=80',
-          'Awesome Sunflower',
-          '01-Jan-2022'),
-      ImageData(
-          'https://images.unsplash.com/photo-1541214240140-980ad45caeb1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-          'Amazing Nature',
-          '02-Jan-2022'),
-      ImageData(
-          'https://images.unsplash.com/photo-1517241080758-95a42c519c1a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-          'Bright Sunflower',
-          '02-Jan-2022'),
-      ImageData(
-          'https://images.unsplash.com/photo-1437275537121-331a0457c8d6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-          'Pink Flowers',
-          '03-Jan-2022'),
-      ImageData(
-          'https://images.unsplash.com/reserve/bOvf94dPRxWu0u3QsPjF_tree.jpg?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=876&q=80',
-          'Clear Nature',
-          '03-Jan-2022'),
-      ImageData(
-          'https://images.unsplash.com/photo-1421930866250-aa0594cea05c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=876&q=80',
-          'Fresh Nature',
-          '04-Jan-2022'),
-      ImageData(
-          'https://images.unsplash.com/photo-1481595357459-84468f6eeaac?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-          'Flying Insect',
-          '04-Jan-2022'),
-      ImageData(
-          'https://images.unsplash.com/photo-1536693308398-d4c2caf33e0b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-          'Natures Gift',
-          '05-Jan-2022'),
-      ImageData(
-          'https://images.unsplash.com/photo-1545560928-ba585ef97070?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80',
-          'Lilly Garden',
-          '05-Jan-2022'),
-      ImageData(
-          'https://images.unsplash.com/photo-1436891436013-5965265af5fc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-          'Fresh Lilly',
-          '06-Jan-2022'),
-      ImageData(
-          'https://images.unsplash.com/photo-1560738851-47a1bd7288a4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-          'White Lilly',
-          '06-Jan-2022')
-    ];
-  }
 
   @override
   Widget render(BuildContext context, HomeVm viewModel) {
@@ -187,9 +132,11 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                           fontWeight: FontWeight.bold),
                     ),
                     IconButton(
-                      icon: Icon(_viewType == ViewType.list
-                          ? Icons.grid_view_sharp
-                          : Icons.list_rounded, color: AppColors.white),
+                      icon: Icon(
+                          _viewType == ViewType.list
+                              ? Icons.grid_view_sharp
+                              : Icons.list_rounded,
+                          color: AppColors.white),
                       onPressed: () {
                         if (_viewType == ViewType.list) {
                           _crossAxisCount = 2;
@@ -208,14 +155,21 @@ class _HomeScreenView extends StatelessView<HomeVm> {
               ),
               Expanded(
                   child: Container(
-                      margin: const EdgeInsets.only(left: AppValues.size_16, right: AppValues.size_16, bottom: AppValues.size_16),
+                      margin: const EdgeInsets.only(
+                          left: AppValues.size_16,
+                          right: AppValues.size_16,
+                          bottom: AppValues.size_16),
                       child: GridView.count(
                         shrinkWrap: true,
                         crossAxisCount: _crossAxisCount,
                         childAspectRatio: _aspectRatio,
-                        children: itemList.map((ImageData imageData) {
-                          return getGridItem(imageData);
-                        }).toList(),
+                        children: List.generate(
+                            viewModel.listGames.items!.length, (index) {
+                          return GestureDetector(
+                            child: getGridItem(viewModel.listGames, index),
+                            onTap: () {},
+                          );
+                        }),
                       )))
             ],
           ),
@@ -224,7 +178,7 @@ class _HomeScreenView extends StatelessView<HomeVm> {
     );
   }
 
-  GridTile getGridItem(ImageData imageData) {
+  GridTile getGridItem(SetModelList<GamesListModel> data, int index) {
     return GridTile(
       child: (_viewType == ViewType.list)
           ? Container(
@@ -234,27 +188,20 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                   ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
-                        imageData.path,
+                        data.items?.elementAt(index).thumbnail ?? '',
                       )),
                   const SizedBox(
                     width: 5,
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        imageData.title,
-                        style: const TextStyle(
-                            fontSize: 20, color: AppColors.white),
-                      ),
-                      Text(
-                        imageData.date,
-                        style: const TextStyle(
-                            fontSize: 15, color: AppColors.white),
-                      ),
-                    ],
-                  )
+                  Flexible(
+                      child: Text(
+                    data.items?.elementAt(index).title ?? '',
+                    maxLines: 2,
+                    style: const TextStyle(
+                        fontSize: 15,
+                        color: AppColors.white,
+                        overflow: TextOverflow.ellipsis),
+                  )),
                 ],
               ),
             )
@@ -265,11 +212,14 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          imageData.path,
+                          data.items?.elementAt(index).thumbnail ?? '',
                         ))),
                 Text(
-                  imageData.title,
-                  style: const TextStyle(fontSize: 15, color: AppColors.white),
+                  data.items?.elementAt(index).title ?? '',
+                  style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.white,
+                      overflow: TextOverflow.ellipsis),
                 ),
                 const SizedBox(
                   height: 5,

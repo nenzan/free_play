@@ -21,6 +21,7 @@ dependencies:
   google_fonts: 2.2.0
   flutter_svg: ^1.1.1+1
   persistent_bottom_nav_bar: ^4.0.2
+  dio: ^4.0.6
 
 dev_dependencies:
   flutter_test:
