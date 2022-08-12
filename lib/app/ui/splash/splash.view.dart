@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:free_play/app/ui/splash/splash_vm.dart';
+import 'package:free_play/app/ui/splash/splash.vm.dart';
 import 'package:free_play/core/assets/app_images.dart';
 import 'package:pmvvm/pmvvm.dart';
 
@@ -24,7 +24,7 @@ class _SplashScreenView extends StatelessView<SplashScreenVm> {
       body: SafeArea(
         child: Container(
           alignment: Alignment.center,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage(AppImages.imgSplashScreen),
               fit: BoxFit.cover,

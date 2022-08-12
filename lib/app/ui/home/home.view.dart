@@ -1,7 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:free_play/app/ui/game/game_detail/game_detail.view.dart';
 import 'package:free_play/app/ui/home/data/model/games_list_model.dart';
-import 'package:free_play/app/ui/home/home_vm.dart';
+import 'package:free_play/app/ui/home/home.vm.dart';
 import 'package:free_play/core/data/enum/view_type_enum.dart';
 import 'package:free_play/core/data/model/setmodellist.dart';
 import 'package:free_play/core/style/app_color.dart';
@@ -156,7 +157,7 @@ class _HomeScreenView extends StatelessView<HomeVm> {
               Expanded(
                   child: Container(
                       margin: const EdgeInsets.only(
-                          left: AppValues.size_16,
+                          left: AppValues.size_8,
                           right: AppValues.size_16,
                           bottom: AppValues.size_16),
                       child: GridView.count(
@@ -167,7 +168,13 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                             viewModel.listGames.items!.length, (index) {
                           return GestureDetector(
                             child: getGridItem(viewModel.listGames, index),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          GameDetailScreen()));
+                            },
                           );
                         }),
                       )))
@@ -182,14 +189,17 @@ class _HomeScreenView extends StatelessView<HomeVm> {
     return GridTile(
       child: (_viewType == ViewType.list)
           ? Container(
-              margin: EdgeInsets.only(top: AppValues.size_8),
+              margin: EdgeInsets.only(top: AppValues.size_4),
               child: Row(
                 children: [
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        data.items?.elementAt(index).thumbnail ?? '',
-                      )),
+                  Container(
+                    margin: EdgeInsets.all(AppValues.size_2),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(AppValues.size_4),
+                        child: Image.network(
+                          data.items?.elementAt(index).thumbnail ?? '',
+                        )),
+                  ),
                   const SizedBox(
                     width: 5,
                   ),
@@ -209,11 +219,14 @@ class _HomeScreenView extends StatelessView<HomeVm> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          data.items?.elementAt(index).thumbnail ?? '',
-                        ))),
+                    child: Container(
+                  margin: EdgeInsets.all(AppValues.size_4),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(AppValues.size_4),
+                      child: Image.network(
+                        data.items?.elementAt(index).thumbnail ?? '',
+                      )),
+                )),
                 Text(
                   data.items?.elementAt(index).title ?? '',
                   style: const TextStyle(

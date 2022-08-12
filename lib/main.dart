@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:free_play/app/app_view.dart';
+import 'package:free_play/app/app.view.dart';
 
 void main() {
   runApp(Root());

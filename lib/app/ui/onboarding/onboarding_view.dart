@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:free_play/app/ui/home/home_view.dart';
+import 'package:free_play/app/ui/home/home.view.dart';
 import 'package:free_play/app/ui/onboarding/onboarding_vm.dart';
 import 'package:free_play/app/ui/onboarding/widget/onboarding_widget.dart';
 import 'package:free_play/core/assets/app_images.dart';
