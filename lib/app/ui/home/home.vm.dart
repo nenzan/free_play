@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_twitch_player/flutter_twitch_player.dart';
 import 'package:free_play/app/ui/home/data/model/games_list_model.dart';
 import 'package:free_play/app/ui/home/data/repo/home_content_repo.dart';
 import 'package:free_play/core/data/model/setmodellist.dart';
@@ -6,6 +7,8 @@ import 'package:pmvvm/pmvvm.dart';
 
 class HomeVm extends ViewModel with HomeContentRepo {
   SetModelList<GamesListModel> listGames = SetModelList<GamesListModel>();
+  List<String> topFiveImage = [];
+  TwitchController twitchController = TwitchController();
 
   @override
   void init() {
@@ -24,16 +27,21 @@ class HomeVm extends ViewModel with HomeContentRepo {
 
       if (res != null && res != 0) {
         listGames.items?.addAll(res);
-        // print(listGames.items?.elementAt(0).title);
+        getTopFiveImage(listGames.items!);
       }
     } catch (e) {
-      // e.printError();
       listGames.error = e.toString();
-      // AppSnackbar.error("Error", "Failed to get list product, try again later");
       debugPrint(e.toString());
     }
 
     listGames.loading = false;
+    notifyListeners();
+  }
+
+  getTopFiveImage(Set<GamesListModel> data) {
+    for (var i = 0; i < 5; i++) {
+      topFiveImage.add(data.elementAt(i).thumbnail);
+    }
     notifyListeners();
   }
 }

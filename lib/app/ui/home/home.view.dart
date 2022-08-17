@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_twitch_player/flutter_twitch_player.dart';
 import 'package:free_play/app/ui/game/game_detail/game_detail.view.dart';
+import 'package:free_play/app/ui/home/data/model/game_detail_model.dart';
 import 'package:free_play/app/ui/home/data/model/games_list_model.dart';
 import 'package:free_play/app/ui/home/home.vm.dart';
 import 'package:free_play/core/data/enum/view_type_enum.dart';
@@ -9,32 +11,6 @@ import 'package:free_play/core/style/app_color.dart';
 import 'package:free_play/core/style/app_values.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pmvvm/pmvvm.dart';
-
-import 'data/model/image_model.dart';
-
-final List<String> imgList = [
-  'https://gamebrott.com/wp-content/uploads/2020/02/Diablo-Immortal-image-696x344-1.jpg',
-  'https://gamebrott.com/wp-content/uploads/2020/06/capsule_616x353.jpg',
-  'https://cms.hybrid.co.id/wp-content/uploads/2016/05/dota2.jpg',
-  'https://i0.wp.com/gamehall.com.br/wp-content/uploads/2019/09/league-newlogo-banner.jpg?fit=1280%2C720&ssl=1',
-  'https://w0.peakpx.com/wallpaper/787/769/HD-wallpaper-pokemon-go-original-cover-pokemon-go-games-pokemon.jpg',
-  'https://cdn-2.tstatic.net/newsmaker/foto/bank/images/cover-game-ragnarok-x-next-generatoin.jpg'
-];
-
-final List<Widget> imageSliders = imgList
-    .map((item) => Container(
-          child: Container(
-            margin: EdgeInsets.all(5.0),
-            child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                child: Stack(
-                  children: <Widget>[
-                    Image.network(item, fit: BoxFit.cover, width: 1000.0),
-                  ],
-                )),
-          ),
-        ))
-    .toList();
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -55,6 +31,19 @@ class _HomeScreenView extends StatelessView<HomeVm> {
 
   @override
   Widget render(BuildContext context, HomeVm viewModel) {
+    final List<Widget> imageSliders = viewModel.topFiveImage
+        .map((item) => Container(
+              margin: const EdgeInsets.all(5.0),
+              child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+                  child: Stack(
+                    children: <Widget>[
+                      Image.network(item, fit: BoxFit.cover, width: 1000.0),
+                    ],
+                  )),
+            ))
+        .toList();
+
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -64,19 +53,20 @@ class _HomeScreenView extends StatelessView<HomeVm> {
               pinned: true,
               snap: false,
               centerTitle: false,
-              backgroundColor: Color(0xFF313640),
+              backgroundColor: const Color(0xFF313640),
               title: const Text('Free Play'),
               actions: [
                 Container(
                   width: 200,
                   height: 40,
-                  margin: EdgeInsets.only(
+                  margin: const EdgeInsets.only(
                       right: AppValues.size_8,
                       bottom: AppValues.size_8,
                       top: AppValues.size_8),
+                  padding: const EdgeInsets.only(bottom: AppValues.size_4),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(AppValues.size_16),
-                      color: Color(0xFF21242a)),
+                      color: const Color(0xFF21242a)),
                   child: Center(
                     child: TextFormField(
                         style: const TextStyle(color: AppColors.white),
@@ -100,27 +90,26 @@ class _HomeScreenView extends StatelessView<HomeVm> {
           ];
         },
         body: Scaffold(
-          backgroundColor: Color(0xFF21242a),
+          backgroundColor: const Color(0xFF21242a),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                child: CarouselSlider(
-                  options: CarouselOptions(
-                    enableInfiniteScroll: false,
-                    autoPlay: true,
-                    aspectRatio: 2.0,
-                    enlargeCenterPage: true,
-                    enlargeStrategy: CenterPageEnlargeStrategy.height,
-                  ),
-                  items: imageSliders,
+              const SizedBox(height: AppValues.size_8,),
+              CarouselSlider(
+                options: CarouselOptions(
+                  enableInfiniteScroll: false,
+                  autoPlay: true,
+                  aspectRatio: 2.0,
+                  enlargeCenterPage: true,
+                  enlargeStrategy: CenterPageEnlargeStrategy.height,
                 ),
+                items: imageSliders,
               ),
-              SizedBox(
-                height: 16,
+              const SizedBox(
+                height: AppValues.size_8,
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -154,6 +143,12 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                   ],
                 ),
               ),
+              TwitchPlayerIFrame(
+                controller: viewModel.twitchController,
+                channel: "loltyler1",
+                borderRadius: BorderRadius.circular(AppValues.size_8),
+              ),
+
               Expanded(
                   child: Container(
                       margin: const EdgeInsets.only(
@@ -169,7 +164,7 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                           return GestureDetector(
                             child: getGridItem(viewModel.listGames, index),
                             onTap: () {
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
@@ -189,30 +184,61 @@ class _HomeScreenView extends StatelessView<HomeVm> {
     return GridTile(
       child: (_viewType == ViewType.list)
           ? Container(
-              margin: EdgeInsets.only(top: AppValues.size_4),
-              child: Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(AppValues.size_2),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(AppValues.size_4),
-                        child: Image.network(
-                          data.items?.elementAt(index).thumbnail ?? '',
+              margin: const EdgeInsets.only(top: AppValues.size_8),
+              child: Container(
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    color: AppColors.greyChartLabel),
+                padding: const EdgeInsets.all(AppValues.size_4),
+                child: Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(AppValues.size_2),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(AppValues.size_4),
+                          child: Image.network(
+                            data.items?.elementAt(index).thumbnail ?? '',
+                          )),
+                    ),
+                    const SizedBox(
+                      width: AppValues.size_8,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                            child: Text(
+                          data.items?.elementAt(index).title ?? '',
+                          maxLines: 2,
+                          style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.whitesmokke,
+                              overflow: TextOverflow.ellipsis),
                         )),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Flexible(
-                      child: Text(
-                    data.items?.elementAt(index).title ?? '',
-                    maxLines: 2,
-                    style: const TextStyle(
-                        fontSize: 15,
-                        color: AppColors.white,
-                        overflow: TextOverflow.ellipsis),
-                  )),
-                ],
+                        Flexible(
+                            child: Text(
+                          data.items?.elementAt(index).developer ?? '',
+                          maxLines: 2,
+                          style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.whitesmokke,
+                              overflow: TextOverflow.ellipsis),
+                        )),
+                        Flexible(
+                            child: Text(
+                          data.items?.elementAt(index).platform ?? '',
+                          maxLines: 2,
+                          style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.whitesmokke,
+                              overflow: TextOverflow.ellipsis),
+                        )),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             )
           : Column(
@@ -220,7 +246,7 @@ class _HomeScreenView extends StatelessView<HomeVm> {
               children: [
                 Expanded(
                     child: Container(
-                  margin: EdgeInsets.all(AppValues.size_4),
+                  margin: EdgeInsets.all(AppValues.size_8),
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(AppValues.size_4),
                       child: Image.network(
@@ -231,6 +257,7 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                   data.items?.elementAt(index).title ?? '',
                   style: const TextStyle(
                       fontSize: 12,
+                      fontWeight: FontWeight.bold,
                       color: AppColors.white,
                       overflow: TextOverflow.ellipsis),
                 ),
@@ -241,4 +268,10 @@ class _HomeScreenView extends StatelessView<HomeVm> {
             ),
     );
   }
+}
+
+class ScreenArguments {
+  final GameDetailModel data;
+
+  ScreenArguments(this.data);
 }
