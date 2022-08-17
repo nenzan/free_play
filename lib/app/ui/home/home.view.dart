@@ -89,93 +89,123 @@ class _HomeScreenView extends StatelessView<HomeVm> {
             )
           ];
         },
-        body: Scaffold(
-          backgroundColor: const Color(0xFF21242a),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: AppValues.size_8,),
-              CarouselSlider(
-                options: CarouselOptions(
-                  enableInfiniteScroll: false,
-                  autoPlay: true,
-                  aspectRatio: 2.0,
-                  enlargeCenterPage: true,
-                  enlargeStrategy: CenterPageEnlargeStrategy.height,
+        body: Container(
+            color: const Color(0xFF21242a),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: AppValues.size_8,
                 ),
-                items: imageSliders,
-              ),
-              const SizedBox(
-                height: AppValues.size_8,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Top Free Game',
-                      textAlign: TextAlign.left,
-                      style: GoogleFonts.signika(
-                          fontSize: 20,
-                          color: AppColors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                          _viewType == ViewType.list
-                              ? Icons.grid_view_sharp
-                              : Icons.list_rounded,
-                          color: AppColors.white),
-                      onPressed: () {
-                        if (_viewType == ViewType.list) {
-                          _crossAxisCount = 2;
-                          _aspectRatio = 1.5;
-                          _viewType = ViewType.grid;
-                        } else {
-                          _crossAxisCount = 1;
-                          _aspectRatio = 5;
-                          _viewType = ViewType.list;
-                        }
-                        viewModel.notifyListeners();
-                      },
-                    )
-                  ],
+                CarouselSlider(
+                  options: CarouselOptions(
+                    enableInfiniteScroll: false,
+                    autoPlay: true,
+                    aspectRatio: 2.0,
+                    enlargeCenterPage: true,
+                    enlargeStrategy: CenterPageEnlargeStrategy.height,
+                  ),
+                  items: imageSliders,
                 ),
-              ),
-              TwitchPlayerIFrame(
-                controller: viewModel.twitchController,
-                channel: "loltyler1",
-                borderRadius: BorderRadius.circular(AppValues.size_8),
-              ),
-
-              Expanded(
+                const SizedBox(
+                  height: AppValues.size_8,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Top Streamer',
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.signika(
+                            fontSize: 20,
+                            color: AppColors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.search_outlined,
+                            color: AppColors.white),
+                        onPressed: () {},
+                      )
+                    ],
+                  ),
+                ),
+                Center(
                   child: Container(
-                      margin: const EdgeInsets.only(
-                          left: AppValues.size_8,
-                          right: AppValues.size_16,
-                          bottom: AppValues.size_16),
-                      child: GridView.count(
-                        shrinkWrap: true,
-                        crossAxisCount: _crossAxisCount,
-                        childAspectRatio: _aspectRatio,
-                        children: List.generate(
-                            viewModel.listGames.items!.length, (index) {
-                          return GestureDetector(
-                            child: getGridItem(viewModel.listGames, index),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          GameDetailScreen()));
-                            },
-                          );
-                        }),
-                      )))
-            ],
-          ),
-        ),
+                    padding: const EdgeInsets.fromLTRB(AppValues.size_16,
+                        AppValues.size_16, AppValues.size_16, AppValues.size_4),
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 220,
+                    child: TwitchPlayerIFrame(
+                      controller: viewModel.twitchController,
+                      channel: "loltyler1",
+                      borderRadius: BorderRadius.circular(AppValues.size_8),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Top Free Game',
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.signika(
+                            fontSize: 20,
+                            color: AppColors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                            _viewType == ViewType.list
+                                ? Icons.grid_view_sharp
+                                : Icons.list_rounded,
+                            color: AppColors.white),
+                        onPressed: () {
+                          if (_viewType == ViewType.list) {
+                            _crossAxisCount = 2;
+                            _aspectRatio = 1.5;
+                            _viewType = ViewType.grid;
+                          } else {
+                            _crossAxisCount = 1;
+                            _aspectRatio = 5;
+                            _viewType = ViewType.list;
+                          }
+                          viewModel.notifyListeners();
+                        },
+                      )
+                    ],
+                  ),
+                ),
+                Expanded(
+                    child: Container(
+                        margin: const EdgeInsets.only(
+                            left: AppValues.size_8,
+                            right: AppValues.size_16,
+                            bottom: AppValues.size_16),
+                        child: GridView.count(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          crossAxisCount: _crossAxisCount,
+                          childAspectRatio: _aspectRatio,
+                          children: List.generate(
+                              viewModel.listGames.items!.length, (index) {
+                            return GestureDetector(
+                              child: getGridItem(viewModel.listGames, index),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            GameDetailScreen()));
+                              },
+                            );
+                          }),
+                        )))
+              ],
+            )),
       ),
     );
   }
