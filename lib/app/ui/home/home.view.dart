@@ -199,7 +199,7 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            GameDetailScreen()));
+                                            GameDetailScreen(id: viewModel.listGames.items!.elementAt(index).id)));
                               },
                             );
                           }),
@@ -298,10 +298,4 @@ class _HomeScreenView extends StatelessView<HomeVm> {
             ),
     );
   }
-}
-
-class ScreenArguments {
-  final GameDetailModel data;
-
-  ScreenArguments(this.data);
 }

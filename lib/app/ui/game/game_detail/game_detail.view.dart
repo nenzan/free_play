@@ -3,25 +3,31 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitch_player/flutter_twitch_player.dart';
 import 'package:free_play/app/ui/game/game_detail/game_detail.vm.dart';
-import 'package:free_play/app/ui/home/home.view.dart';
 import 'package:free_play/core/style/app_color.dart';
+import 'package:free_play/core/style/app_values.dart';
+import 'package:free_play/core/widgets/image_url.dart';
 import 'package:pmvvm/pmvvm.dart';
 
-class GameDetailScreen extends StatelessWidget {
+import 'game_detail.props.dart';
 
-  static const routeName = '/gameDetail';
+class GameDetailScreen extends StatelessWidget {
+  GameDetailScreen({
+    Key? key,
+    required int id,
+  })  : props = GameDetailProps(id: id),
+        super(key: key);
+  final GameDetailProps props;
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
-    return MVVM<GameDetailVm>(
-        view: () => _GameDetailScreen(args), viewModel: GameDetailVm());
+    return Provider.value(
+        value: props,
+        child: MVVM<GameDetailVm>(
+            view: () => _GameDetailScreen(), viewModel: GameDetailVm()));
   }
 }
 
 class _GameDetailScreen extends StatelessView<GameDetailVm> {
-  const _GameDetailScreen(ScreenArguments args);
-
   @override
   Widget render(BuildContext context, GameDetailVm viewModel) {
     return Scaffold(
@@ -44,6 +50,11 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                   ),
                   flexibleSpace: Stack(
                     children: [
+                      Positioned.fill(
+                          child: ImageUrl(
+                              fit: BoxFit.cover,
+                              fileName:
+                                  viewModel.detailGame.item?.thumbnail ?? "")),
                       Positioned(
                         bottom: -1,
                         left: 0,
@@ -53,7 +64,7 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                           decoration: const BoxDecoration(
                             color: AppColors.white,
                             borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(8),
+                              top: Radius.circular(AppValues.size_16),
                             ),
                           ),
                         ),
@@ -73,26 +84,36 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                     child: ConstrainedBox(
                       constraints: BoxConstraints.tightFor(
                           height:
-                          MediaQueryData
-                              .fromWindow(window)
-                              .size
-                              .height),
-                      child: Stack(
+                              MediaQueryData.fromWindow(window).size.height),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: TwitchPlayerIFrame(
-                                  controller: viewModel.twitchController,
-                                  channel: "dota2ti",
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
+                          Center(
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width / 1.5,
+                              child: Text(
+                                "\"${viewModel.detailGame.item!.shortDescription}\"",
+                                style: const TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    color: AppColors.greyChartLabel),
                               ),
-                            ],
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.all(AppValues.size_8),
+                            child: Text("Description",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: AppValues.size_20)),
                           ),
                           Container(
-                            child: Text('test detail game'),
+                            padding: const EdgeInsets.all(AppValues.size_8),
+                            child: Text(
+                              viewModel.detailGame.item!.description,
+                              style: const TextStyle(
+                                  fontStyle: FontStyle.normal,
+                                  color: AppColors.blackcaption),
+                            ),
                           )
                         ],
                       ),
