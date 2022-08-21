@@ -38,7 +38,7 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
               return [
                 SliverAppBar(
                   backgroundColor: Colors.white,
-                  expandedHeight: 300.0,
+                  expandedHeight: 250.0,
                   leading: IconButton(
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -71,6 +71,24 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                       ),
                     ],
                   ),
+                  actions: [
+                    Container(
+                      width: 75,
+                      height: 20,
+                      margin: const EdgeInsets.only(
+                          right: AppValues.size_8,
+                          bottom: AppValues.size_16,
+                          top: AppValues.size_16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(AppValues.size_16),
+                        color: viewModel.detailGame.item?.status == 'Live'
+                            ? AppColors.glowGreen
+                            : AppColors.pink,
+                      ),
+                      child: Center(
+                          child: Text(viewModel.detailGame.item?.status ?? '')),
+                    )
+                  ],
                   pinned: false,
                   floating: false,
                   snap: false,
