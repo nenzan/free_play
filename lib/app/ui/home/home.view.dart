@@ -139,7 +139,7 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                     height: 220,
                     child: TwitchPlayerIFrame(
                       controller: viewModel.twitchController,
-                      channel: "loltyler1",
+                      channel: viewModel.topStreamer,
                       borderRadius: BorderRadius.circular(AppValues.size_8),
                     ),
                   ),

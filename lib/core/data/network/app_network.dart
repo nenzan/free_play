@@ -3,8 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:free_play/core/data/constant/app_constant.dart';
 
 class AppNetworkClient {
-  static Dio _dio = Dio()
-    ..options.connectTimeout = 10000;
+  static Dio _dio = Dio()..options.connectTimeout = 10000;
 
   static String? baseurl = AppConstant.baseUrl;
 
@@ -18,13 +17,13 @@ class AppNetworkClient {
 
   static Future<Response> get({
     Map<String, dynamic>? data,
-    String? url,
+    required String url,
     Map<String, dynamic>? customHeader,
     required String path,
   }) async {
     try {
-      final res =
-      await _dio.get((url ?? baseurl)! + path, queryParameters: data);
+      final res = await _dio.get(url + path,
+          queryParameters: data, options: Options(headers : customHeader));
 
       debugPrint("CALLING GET " + res.requestOptions.path);
       debugPrint("Query GET " + res.requestOptions.queryParameters.toString());

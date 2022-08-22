@@ -9,7 +9,6 @@ import 'package:free_play/core/data/model/setmodellist.dart';
 import 'package:pmvvm/pmvvm.dart';
 
 class GameDetailVm extends ViewModel with GameDetailRepo {
-  TwitchController twitchController = TwitchController();
   late GameDetailProps props;
   SetModel<GameDetailModel> detailGame = SetModel<GameDetailModel>();
 
