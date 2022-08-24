@@ -1,8 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_twitch_player/flutter_twitch_player.dart';
 import 'package:free_play/app/ui/game/game_detail/game_detail.vm.dart';
+import 'package:free_play/app/ui/home/data/model/game_detail_model.dart';
+import 'package:free_play/core/data/model/setmodel.dart';
 import 'package:free_play/core/style/app_color.dart';
 import 'package:free_play/core/style/app_values.dart';
 import 'package:free_play/core/widgets/image_url.dart';
@@ -28,6 +31,9 @@ class GameDetailScreen extends StatelessWidget {
 }
 
 class _GameDetailScreen extends StatelessView<GameDetailVm> {
+  int _crossAxisCount = 2;
+  double _aspectRatio = 1.5;
+
   @override
   Widget render(BuildContext context, GameDetailVm viewModel) {
     return Scaffold(
@@ -37,7 +43,7 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                 (BuildContext context, bool innerBoxIsScrolled) {
               return [
                 SliverAppBar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: const Color(0xFF313640),
                   expandedHeight: 250.0,
                   leading: IconButton(
                     onPressed: () {
@@ -54,7 +60,7 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                           child: ImageUrl(
                               fit: BoxFit.cover,
                               fileName:
-                                  viewModel.detailGame.item?.thumbnail ?? "")),
+                                  viewModel.detailGame?.item?.thumbnail ?? '')),
                       Positioned(
                         bottom: -1,
                         left: 0,
@@ -62,7 +68,7 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                         child: Container(
                           height: 30,
                           decoration: const BoxDecoration(
-                            color: AppColors.white,
+                            color: Color(0xFF313640),
                             borderRadius: BorderRadius.vertical(
                               top: Radius.circular(AppValues.size_16),
                             ),
@@ -81,12 +87,13 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                           top: AppValues.size_16),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(AppValues.size_16),
-                        color: viewModel.detailGame.item?.status == 'Live'
+                        color: viewModel.detailGame?.item?.status == 'Live'
                             ? AppColors.glowGreen
                             : AppColors.pink,
                       ),
                       child: Center(
-                          child: Text(viewModel.detailGame.item?.status ?? '')),
+                          child:
+                              Text(viewModel.detailGame?.item?.status ?? '')),
                     )
                   ],
                   pinned: false,
@@ -98,43 +105,201 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
             floatHeaderSlivers: true,
             body: Expanded(
                 child: SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
-                    child: ConstrainedBox(
+                    physics: const NeverScrollableScrollPhysics(),
+                    child: Container(
+                      color: const Color(0xFF313640),
                       constraints: BoxConstraints.tightFor(
                           height:
                               MediaQueryData.fromWindow(window).size.height),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width / 1.5,
-                              child: Text(
-                                "\"${viewModel.detailGame.item!.shortDescription}\"",
-                                style: const TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    color: AppColors.greyChartLabel),
+                      child: Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width / 1.5,
+                                child: Text(
+                                  "\"${viewModel.detailGame?.item?.shortDescription ?? ''}\"",
+                                  style: const TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      color: AppColors.whiteborderinput),
+                                ),
                               ),
                             ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(AppValues.size_8),
-                            child: Text("Description",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: AppValues.size_20)),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(AppValues.size_8),
-                            child: Text(
-                              viewModel.detailGame.item!.description,
-                              style: const TextStyle(
-                                  fontStyle: FontStyle.normal,
-                                  color: AppColors.blackcaption),
+                            Padding(
+                              padding: const EdgeInsets.all(AppValues.size_16),
+                              child: Text(
+                                  "About ${viewModel.detailGame?.item?.title ?? ''}",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: AppValues.size_20,
+                                      color: AppColors.whitesmokke)),
                             ),
-                          )
-                        ],
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: AppValues.size_16),
+                              child: Text(
+                                viewModel.detailGame?.item?.description ?? '',
+                                style: const TextStyle(
+                                    fontStyle: FontStyle.normal,
+                                    color: AppColors.whitesmokke),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.all(AppValues.size_16),
+                              child: Text("Additional Information",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: AppValues.size_20,
+                                      color: AppColors.whitesmokke)),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: AppValues.size_16),
+                              child: getAdditionalInfo(viewModel.detailGame),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.all(AppValues.size_16),
+                              child: Text("Screenshots",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: AppValues.size_20,
+                                      color: AppColors.whitesmokke)),
+                            ),
+                            Container(
+                                child: GridView.count(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              crossAxisCount: _crossAxisCount,
+                              childAspectRatio: _aspectRatio,
+                              children: List.generate(
+                                  viewModel.detailGame?.item?.screenshots
+                                          .getRange(0, 2)
+                                          .length ??
+                                      0, (index) {
+                                return GestureDetector(
+                                  child: getGridItem({
+                                    ...viewModel
+                                            .detailGame?.item?.screenshots ??
+                                        []
+                                  }, index),
+                                );
+                              }),
+                            ))
+                          ],
+                        ),
                       ),
                     )))));
+  }
+
+  Row getAdditionalInfo(SetModel<GameDetailModel>? data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Title",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppValues.size_16,
+                    color: Colors.grey)),
+            Text(data?.item?.title ?? '',
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppValues.size_16,
+                    color: AppColors.whitesmokke)),
+            const SizedBox(
+              height: AppValues.size_16,
+            ),
+            const Text("Publisher",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppValues.size_16,
+                    color: Colors.grey)),
+            Text(data?.item?.publisher ?? '',
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppValues.size_16,
+                    color: AppColors.whitesmokke)),
+            const SizedBox(
+              height: AppValues.size_8,
+            ),
+            const Text("Genre",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppValues.size_16,
+                    color: Colors.grey)),
+            Text(data?.item?.genre ?? '',
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppValues.size_16,
+                    color: AppColors.whitesmokke)),
+            const SizedBox(
+              height: AppValues.size_8,
+            ),
+          ],
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Developer",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppValues.size_16,
+                    color: Colors.grey)),
+            Text(data?.item?.developer ?? '',
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppValues.size_16,
+                    color: AppColors.whitesmokke)),
+            const SizedBox(
+              height: AppValues.size_16,
+            ),
+            const Text("Release Date",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppValues.size_16,
+                    color: Colors.grey)),
+            Text(data?.item?.releaseDate.toString() ?? '',
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppValues.size_16,
+                    color: AppColors.whitesmokke)),
+            const SizedBox(
+              height: AppValues.size_8,
+            ),
+            const Text("Platform",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppValues.size_16,
+                    color: Colors.grey)),
+            Text(data?.item?.platform ?? '',
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppValues.size_16,
+                    color: AppColors.whitesmokke)),
+            const SizedBox(
+              height: AppValues.size_8,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  GridTile getGridItem(Set<Screenshot> data, int index) {
+    return GridTile(
+      child: Flexible(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: AppValues.size_4),
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(AppValues.size_4),
+              child: Image.network(
+                data.elementAt(index).image,
+              )),
+        ),
+      ),
+    );
   }
 }

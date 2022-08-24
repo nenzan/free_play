@@ -70,6 +70,8 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                   child: Center(
                     child: TextFormField(
                         style: const TextStyle(color: AppColors.white),
+                        controller: viewModel.controller,
+                        onChanged: viewModel.onSearchTextChanged,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Search Here...',
@@ -116,41 +118,7 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Top Streamer',
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.signika(
-                            fontSize: 20,
-                            color: AppColors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.search_outlined,
-                            color: AppColors.white),
-                        onPressed: () {},
-                      )
-                    ],
-                  ),
-                ),
-                Center(
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(AppValues.size_16,
-                        AppValues.size_16, AppValues.size_16, AppValues.size_4),
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: 220,
-                    child: TwitchPlayerIFrame(
-                      controller: viewModel.twitchController,
-                      channel: viewModel.topStreamer,
-                      borderRadius: BorderRadius.circular(AppValues.size_8),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Top Free Game',
+                        'New Release',
                         textAlign: TextAlign.left,
                         style: GoogleFonts.signika(
                             fontSize: 20,
@@ -180,37 +148,73 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                   ),
                 ),
                 Expanded(
-                    child: Container(
-                        margin: const EdgeInsets.only(
-                            left: AppValues.size_8,
-                            right: AppValues.size_16,
-                            bottom: AppValues.size_16),
-                        child: GridView.count(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          crossAxisCount: _crossAxisCount,
-                          childAspectRatio: _aspectRatio,
-                          children: List.generate(
-                              viewModel.listGames.items!.length, (index) {
-                            return GestureDetector(
-                              child: getGridItem(viewModel.listGames, index),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            GameDetailScreen(id: viewModel.listGames.items!.elementAt(index).id)));
-                              },
-                            );
-                          }),
-                        )))
+                    child: viewModel.searchResult.isNotEmpty ||
+                            viewModel.controller.text.isNotEmpty
+                        ? Container(
+                            margin: const EdgeInsets.only(
+                                left: AppValues.size_8,
+                                right: AppValues.size_16,
+                                bottom: AppValues.size_16),
+                            child: GridView.count(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              crossAxisCount: _crossAxisCount,
+                              childAspectRatio: _aspectRatio,
+                              children: List.generate(
+                                  viewModel.searchResult.length, (index) {
+                                return GestureDetector(
+                                  child: getGridItem(
+                                      {...viewModel.searchResult}, index),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                GameDetailScreen(
+                                                    id: viewModel
+                                                        .searchResult
+                                                        .elementAt(index)
+                                                        .id)));
+                                  },
+                                );
+                              }),
+                            ))
+                        : Container(
+                            margin: const EdgeInsets.only(
+                                left: AppValues.size_8,
+                                right: AppValues.size_16,
+                                bottom: AppValues.size_16),
+                            child: GridView.count(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              crossAxisCount: _crossAxisCount,
+                              childAspectRatio: _aspectRatio,
+                              children: List.generate(
+                                  viewModel.listGames.items!.length, (index) {
+                                return GestureDetector(
+                                  child: getGridItem(
+                                      viewModel.listGames.items!, index),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                GameDetailScreen(
+                                                    id: viewModel
+                                                        .listGames.items!
+                                                        .elementAt(index)
+                                                        .id)));
+                                  },
+                                );
+                              }),
+                            )))
               ],
             )),
       ),
     );
   }
 
-  GridTile getGridItem(SetModelList<GamesListModel> data, int index) {
+  GridTile getGridItem(Set<GamesListModel> data, int index) {
     return GridTile(
       child: (_viewType == ViewType.list)
           ? Container(
@@ -227,46 +231,77 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(AppValues.size_4),
                           child: Image.network(
-                            data.items?.elementAt(index).thumbnail ?? '',
+                            data.elementAt(index).thumbnail,
                           )),
                     ),
                     const SizedBox(
                       width: AppValues.size_8,
                     ),
-                    Column(
+                    Flexible(
+                        child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Flexible(
-                            child: Text(
-                          data.items?.elementAt(index).title ?? '',
+                        Text(
+                          data.elementAt(index).title,
                           maxLines: 2,
                           style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               color: AppColors.whitesmokke,
                               overflow: TextOverflow.ellipsis),
-                        )),
-                        Flexible(
-                            child: Text(
-                          data.items?.elementAt(index).developer ?? '',
-                          maxLines: 2,
+                        ),
+                        Text(
+                          data.elementAt(index).shortDescription,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              fontSize: 12,
-                              color: AppColors.whitesmokke,
-                              overflow: TextOverflow.ellipsis),
-                        )),
-                        Flexible(
-                            child: Text(
-                          data.items?.elementAt(index).platform ?? '',
-                          maxLines: 2,
-                          style: const TextStyle(
-                              fontSize: 12,
-                              color: AppColors.whitesmokke,
-                              overflow: TextOverflow.ellipsis),
-                        )),
+                            fontSize: 12,
+                            color: AppColors.whitesmokke,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 50,
+                              height: 15,
+                              padding: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.circular(AppValues.size_4),
+                                  color: AppColors.glowGreen),
+                              child: Center(
+                                child: Text(data.elementAt(index).genre,
+                                    style: const TextStyle(
+                                        fontSize: 8,
+                                        color: AppColors.whitesmokke,
+                                        overflow: TextOverflow.ellipsis)),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Container(
+                              child: data.elementAt(index).platform ==
+                                      'PC (Windows)'
+                                  ? const Icon(
+                                      Icons.desktop_windows,
+                                      color: AppColors.whitesmokke,
+                                      size: 15,
+                                    )
+                                  : const Icon(
+                                      Icons.web_asset_outlined,
+                                      color: AppColors.whitesmokke,
+                                      size: 15,
+                                    ),
+                            ),
+                          ],
+                        ),
                       ],
-                    ),
+                    )),
                   ],
                 ),
               ),
@@ -276,15 +311,39 @@ class _HomeScreenView extends StatelessView<HomeVm> {
               children: [
                 Expanded(
                     child: Container(
-                  margin: EdgeInsets.all(AppValues.size_8),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(AppValues.size_4),
-                      child: Image.network(
-                        data.items?.elementAt(index).thumbnail ?? '',
-                      )),
+                  margin: const EdgeInsets.all(AppValues.size_8),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(AppValues.size_4),
+                          child: Image.network(
+                            data.elementAt(index).thumbnail,
+                          )),
+                      Positioned(
+                        bottom: 4,
+                        right: 4,
+                        child: Container(
+                          width: 50,
+                          height: 15,
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(AppValues.size_4),
+                              color: AppColors.glowGreen),
+                          child: Center(
+                            child: Text(data.elementAt(index).genre,
+                                style: const TextStyle(
+                                    fontSize: 8,
+                                    color: AppColors.whitesmokke,
+                                    overflow: TextOverflow.ellipsis)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 )),
                 Text(
-                  data.items?.elementAt(index).title ?? '',
+                  data.elementAt(index).title,
                   style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,

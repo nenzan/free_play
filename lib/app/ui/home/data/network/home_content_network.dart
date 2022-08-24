@@ -5,10 +5,10 @@ import 'package:free_play/core/data/constant/app_constant.dart';
 import 'package:free_play/core/data/network/app_network.dart';
 
 class HomeContentNetwork {
-  Future<List<GamesListModel>> apiGetListGames() async {
+  Future<List<GamesListModel>> apiGetListGames(String sort) async {
     try {
-      final res =
-          await AppNetworkClient.get(url: AppConstant.baseUrl, path: 'games');
+      final res = await AppNetworkClient.get(
+          url: AppConstant.baseUrl, path: 'games', data: {'sort-by': sort});
       return (res.data as List).map((x) => GamesListModel.fromJson(x)).toList();
     } catch (e) {
       rethrow;
@@ -18,12 +18,7 @@ class HomeContentNetwork {
   Future<StreamResponseModel> apiGetStreamList() async {
     try {
       final res = await AppNetworkClient.get(
-          url: AppConstant.twitchApiUrl,
-          path: 'streams',
-          customHeader: {
-            'Authorization': AppConstant.twitchToken,
-            'Client-Id': AppConstant.twitchClientId
-          });
+          url: AppConstant.twitchApiUrl, path: 'streams');
       return StreamResponseModel.fromJson(res.data);
     } catch (e) {
       rethrow;

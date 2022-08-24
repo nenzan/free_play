@@ -10,7 +10,7 @@ import 'package:pmvvm/pmvvm.dart';
 
 class GameDetailVm extends ViewModel with GameDetailRepo {
   late GameDetailProps props;
-  SetModel<GameDetailModel> detailGame = SetModel<GameDetailModel>();
+  SetModel<GameDetailModel>? detailGame = SetModel<GameDetailModel>();
 
   @override
   void init() {
@@ -21,24 +21,22 @@ class GameDetailVm extends ViewModel with GameDetailRepo {
   }
 
   Future<void> getGameDetail() async {
-    detailGame.loading = true;
+    detailGame?.loading = true;
     notifyListeners();
-    detailGame.item = null;
+    detailGame?.item = null;
 
     try {
       final res = await repoGetGameDetail(id: props.id);
 
       print(res.toJson());
-      if (res != null) {
-        detailGame.item = res;
-        notifyListeners();
-      }
+      detailGame?.item = res;
+      notifyListeners();
     } catch (e) {
-      detailGame.error = e.toString();
+      detailGame?.error = e.toString();
       debugPrint(e.toString());
     }
 
-    detailGame.loading = false;
+    detailGame?.loading = false;
     notifyListeners();
   }
 }

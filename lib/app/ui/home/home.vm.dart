@@ -9,18 +9,24 @@ import 'package:free_play/core/data/model/setmodellist.dart';
 import 'package:pmvvm/pmvvm.dart';
 
 class HomeVm extends ViewModel with HomeContentRepo {
+  SetModelList<GamesListModel> listGamesPopular = SetModelList<GamesListModel>();
   SetModelList<GamesListModel> listGames = SetModelList<GamesListModel>();
-  SetModelList<StreamModel> listStream = SetModelList<StreamModel>();
   List<String> topFiveImage = [];
-  TwitchController twitchController = TwitchController();
-  late String topStreamer;
+  final List<GamesListModel> searchResult = [];
+  final List<GamesListModel> _gameDetails = [];
+  TextEditingController controller = TextEditingController();
 
   @override
   void init() {
     super.init();
-
     getGamesList();
-    getStreamsist();
+    getGamesListPopular();
+  }
+
+  @override
+  void onResume() {
+    getGamesList();
+    getGamesListPopular();
   }
 
   Future<void> getGamesList() async {
@@ -29,11 +35,11 @@ class HomeVm extends ViewModel with HomeContentRepo {
     listGames.items = {};
 
     try {
-      final res = await repoGetListGame();
+      final res = await repoGetListGame('release-date');
 
       if (res != null && res != 0) {
         listGames.items?.addAll(res);
-        getTopFiveImage(listGames.items!);
+        _gameDetails.addAll(res.toList());
       }
     } catch (e) {
       listGames.error = e.toString();
@@ -44,30 +50,45 @@ class HomeVm extends ViewModel with HomeContentRepo {
     notifyListeners();
   }
 
-  Future<void> getStreamsist() async {
-    listStream.loading = true;
+  Future<void> getGamesListPopular() async {
+    listGamesPopular.loading = true;
     notifyListeners();
-    listStream.items = {};
+    listGamesPopular.items = {};
 
     try {
-      final res = await repoGetListStream();
+      final res = await repoGetListGame('popular');
 
-      if (res.data.isNotEmpty) {
-        listStream.items?.addAll(res.data);
-        topStreamer = listStream.items?.elementAt(0).userName ?? 'dota2ti';
+      if (res != null && res != 0) {
+        listGamesPopular.items?.addAll(res);
+        getTopFiveImage(listGamesPopular.items!);
       }
     } catch (e) {
-      listStream.error = e.toString();
+      listGamesPopular.error = e.toString();
       debugPrint(e.toString());
     }
 
-    listStream.loading = false;
+    listGamesPopular.loading = false;
     notifyListeners();
   }
 
   getTopFiveImage(Set<GamesListModel> data) {
     for (var i = 0; i < 5; i++) {
       topFiveImage.add(data.elementAt(i).thumbnail);
+    }
+    notifyListeners();
+  }
+
+  onSearchTextChanged(String text) async {
+    searchResult.clear();
+    if (text.isEmpty) {
+      notifyListeners();
+      return;
+    }
+
+    for (var gamesListModel in listGames.items!) {
+      if (gamesListModel.title.contains(text) ) {
+        searchResult.add(gamesListModel);
+      }
     }
     notifyListeners();
   }

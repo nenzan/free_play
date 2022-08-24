@@ -6,9 +6,9 @@ import 'package:free_play/app/ui/home/data/network/home_content_network.dart';
 class HomeContentRepo {
   final _myNetwork = HomeContentNetwork();
 
-  Future<List<GamesListModel>> repoGetListGame() async {
+  Future<List<GamesListModel>> repoGetListGame(String sort) async {
     try {
-      return await _myNetwork.apiGetListGames();
+      return await _myNetwork.apiGetListGames(sort);
     } catch (e) {
       rethrow;
     }
