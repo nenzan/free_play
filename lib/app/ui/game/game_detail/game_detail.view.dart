@@ -39,150 +39,149 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return [
-              SliverAppBar(
-                backgroundColor: const Color(0xFF313640),
-                expandedHeight: 250.0,
-                leading: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  icon: const Icon(
-                    Icons.keyboard_arrow_left_outlined,
-                    color: Colors.grey,
-                  ),
-                ),
-                flexibleSpace: Stack(
-                  children: [
-                    Positioned.fill(
-                        child: ImageUrl(
-                            fit: BoxFit.cover,
-                            fileName:
-                                viewModel.detailGame?.item?.thumbnail ?? '')),
-                    Positioned(
-                      bottom: -1,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        height: 30,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF313640),
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(AppValues.size_16),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                actions: [
-                  Container(
-                    width: 75,
-                    height: 20,
-                    margin: const EdgeInsets.only(
-                        right: AppValues.size_8,
-                        bottom: AppValues.size_16,
-                        top: AppValues.size_16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppValues.size_16),
-                      color: viewModel.detailGame?.item?.status == 'Live'
-                          ? AppColors.glowGreen
-                          : AppColors.pink,
-                    ),
-                    child: Center(
-                        child: Text(viewModel.detailGame?.item?.status ?? '')),
-                  )
-                ],
-                pinned: false,
-                floating: false,
-                snap: false,
-              )
-            ];
-          },
-          floatHeaderSlivers: true,
-          body: SingleChildScrollView(
-            child: Container(
-              color: const Color(0xFF313640),
-              constraints: BoxConstraints.tightFor(
-                  height: MediaQueryData.fromWindow(window).size.height + 250),
-              child: Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width / 1.5,
-                        child: Text(
-                          "\"${viewModel.detailGame?.item?.shortDescription ?? ''}\"",
-                          style: const TextStyle(
-                              fontStyle: FontStyle.italic,
-                              color: AppColors.whiteborderinput),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(AppValues.size_16),
-                      child: Text(
-                          "About ${viewModel.detailGame?.item?.title ?? ''}",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: AppValues.size_20,
-                              color: AppColors.whitesmokke)),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppValues.size_16),
-                      child: Text(
-                        viewModel.detailGame?.item?.description ?? '',
-                        style: const TextStyle(
-                            fontStyle: FontStyle.normal,
-                            color: AppColors.whitesmokke),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(AppValues.size_16),
-                      child: Text("Additional Information",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: AppValues.size_20,
-                              color: AppColors.whitesmokke)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppValues.size_16),
-                      child: getAdditionalInfo(viewModel.detailGame),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(
-                          top: AppValues.size_16,
-                          left: AppValues.size_16,
-                          right: AppValues.size_16),
-                      child: Text("Screenshots",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: AppValues.size_20,
-                              color: AppColors.whitesmokke)),
-                    ),
-                    Expanded(
-                        child: GridView.count(
-                      shrinkWrap: true,
-                      crossAxisCount: _crossAxisCount,
-                      childAspectRatio: _aspectRatio,
-                      children: List.generate(
-                          viewModel.detailGame?.item?.screenshots.length ?? 0,
-                          (index) {
-                        return GestureDetector(
-                            child: getGridItem({
-                          ...viewModel.detailGame?.item?.screenshots ?? []
-                        }, index));
-                      }),
-                    ))
-                  ],
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              backgroundColor: const Color(0xFF313640),
+              expandedHeight: 250.0,
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(
+                  Icons.keyboard_arrow_left_outlined,
+                  color: Colors.grey,
                 ),
               ),
+              flexibleSpace: Stack(
+                children: [
+                  Positioned.fill(
+                      child: ImageUrl(
+                          fit: BoxFit.cover,
+                          fileName:
+                              viewModel.detailGame?.item?.thumbnail ?? '')),
+                  Positioned(
+                    bottom: -1,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: 30,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF313640),
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(AppValues.size_16),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                Container(
+                  width: 75,
+                  height: 20,
+                  margin: const EdgeInsets.only(
+                      right: AppValues.size_8,
+                      bottom: AppValues.size_16,
+                      top: AppValues.size_16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppValues.size_16),
+                    color: viewModel.detailGame?.item?.status == 'Live'
+                        ? AppColors.glowGreen
+                        : AppColors.pink,
+                  ),
+                  child: Center(
+                      child: Text(viewModel.detailGame?.item?.status ?? '')),
+                )
+              ],
+              pinned: false,
+              floating: false,
+              snap: false,
+            )
+          ];
+        },
+        floatHeaderSlivers: true,
+        body: SingleChildScrollView(
+          child: Container(
+            color: const Color(0xFF313640),
+            constraints: BoxConstraints.tightFor(
+                height: MediaQueryData.fromWindow(window).size.height + 250),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.5,
+                    child: Text(
+                      "\"${viewModel.detailGame?.item?.shortDescription ?? ''}\"",
+                      style: const TextStyle(
+                          fontStyle: FontStyle.italic,
+                          color: AppColors.whiteborderinput),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(AppValues.size_16),
+                  child: Text(
+                      "About ${viewModel.detailGame?.item?.title ?? ''}",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: AppValues.size_20,
+                          color: AppColors.whitesmokke)),
+                ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: AppValues.size_16),
+                  child: Text(
+                    viewModel.detailGame?.item?.description ?? '',
+                    style: const TextStyle(
+                        fontStyle: FontStyle.normal,
+                        color: AppColors.whitesmokke),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(AppValues.size_16),
+                  child: Text("Additional Information",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: AppValues.size_20,
+                          color: AppColors.whitesmokke)),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: AppValues.size_16),
+                  child: getAdditionalInfo(viewModel.detailGame),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(
+                      top: AppValues.size_16,
+                      left: AppValues.size_16,
+                      right: AppValues.size_16),
+                  child: Text("Screenshots",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: AppValues.size_20,
+                          color: AppColors.whitesmokke)),
+                ),
+                Flexible(
+                    child: GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: _crossAxisCount,
+                  childAspectRatio: _aspectRatio,
+                  children: List.generate(
+                      viewModel.detailGame?.item?.screenshots.length ?? 0,
+                      (index) {
+                    return GestureDetector(
+                        child: getGridItem(
+                            {...viewModel.detailGame?.item?.screenshots ?? []},
+                            index));
+                  }),
+                ))
+              ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 

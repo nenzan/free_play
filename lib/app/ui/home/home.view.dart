@@ -171,8 +171,7 @@ class _HomeScreenView extends StatelessView<HomeVm> {
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 GameDetailScreen(
-                                                    id: viewModel
-                                                        .searchResult
+                                                    id: viewModel.searchResult
                                                         .elementAt(index)
                                                         .id)));
                                   },
@@ -309,7 +308,7 @@ class _HomeScreenView extends StatelessView<HomeVm> {
           : Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
+                Flexible(
                     child: Container(
                   margin: const EdgeInsets.all(AppValues.size_8),
                   child: Stack(
