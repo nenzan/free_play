@@ -104,92 +104,91 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
             },
             floatHeaderSlivers: true,
             body: Expanded(
-                child: SingleChildScrollView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    child: Container(
-                      color: const Color(0xFF313640),
-                      constraints: BoxConstraints.tightFor(
-                          height:
-                              MediaQueryData.fromWindow(window).size.height),
-                      child: Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width / 1.5,
-                                child: Text(
-                                  "\"${viewModel.detailGame?.item?.shortDescription ?? ''}\"",
-                                  style: const TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      color: AppColors.whiteborderinput),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(AppValues.size_16),
-                              child: Text(
-                                  "About ${viewModel.detailGame?.item?.title ?? ''}",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: AppValues.size_20,
-                                      color: AppColors.whitesmokke)),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: AppValues.size_16),
-                              child: Text(
-                                viewModel.detailGame?.item?.description ?? '',
-                                style: const TextStyle(
-                                    fontStyle: FontStyle.normal,
-                                    color: AppColors.whitesmokke),
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.all(AppValues.size_16),
-                              child: Text("Additional Information",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: AppValues.size_20,
-                                      color: AppColors.whitesmokke)),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: AppValues.size_16),
-                              child: getAdditionalInfo(viewModel.detailGame),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.all(AppValues.size_16),
-                              child: Text("Screenshots",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: AppValues.size_20,
-                                      color: AppColors.whitesmokke)),
-                            ),
-                            Container(
-                                child: GridView.count(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              crossAxisCount: _crossAxisCount,
-                              childAspectRatio: _aspectRatio,
-                              children: List.generate(
-                                  viewModel.detailGame?.item?.screenshots
-                                          .getRange(0, 2)
-                                          .length ??
-                                      0, (index) {
-                                return GestureDetector(
-                                  child: getGridItem({
-                                    ...viewModel
-                                            .detailGame?.item?.screenshots ??
-                                        []
-                                  }, index),
-                                );
-                              }),
-                            ))
-                          ],
+              child: SingleChildScrollView(
+                  child: Container(
+                color: const Color(0xFF313640),
+                constraints: BoxConstraints.tightFor(
+                    height:
+                        MediaQueryData.fromWindow(window).size.height + 250),
+                child: Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width / 1.5,
+                          child: Text(
+                            "\"${viewModel.detailGame?.item?.shortDescription ?? ''}\"",
+                            style: const TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: AppColors.whiteborderinput),
+                          ),
                         ),
                       ),
-                    )))));
+                      Padding(
+                        padding: const EdgeInsets.all(AppValues.size_16),
+                        child: Text(
+                            "About ${viewModel.detailGame?.item?.title ?? ''}",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: AppValues.size_20,
+                                color: AppColors.whitesmokke)),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: AppValues.size_16),
+                        child: Text(
+                          viewModel.detailGame?.item?.description ?? '',
+                          style: const TextStyle(
+                              fontStyle: FontStyle.normal,
+                              color: AppColors.whitesmokke),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(AppValues.size_16),
+                        child: Text("Additional Information",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: AppValues.size_20,
+                                color: AppColors.whitesmokke)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: AppValues.size_16),
+                        child: getAdditionalInfo(viewModel.detailGame),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(
+                            top: AppValues.size_16,
+                            left: AppValues.size_16,
+                            right: AppValues.size_16),
+                        child: Text("Screenshots",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: AppValues.size_20,
+                                color: AppColors.whitesmokke)),
+                      ),
+                      GridView.count(
+                        shrinkWrap: true,
+                        crossAxisCount: _crossAxisCount,
+                        childAspectRatio: _aspectRatio,
+                        children: List.generate(
+                            viewModel.detailGame?.item?.screenshots.getRange(0, 2).length ?? 0,
+                            (index) {
+                          return GestureDetector(
+                            child: Expanded(
+                              child: getGridItem({
+                                ...viewModel.detailGame?.item?.screenshots ?? []
+                              }, index),
+                            ),
+                          );
+                        }),
+                      )
+                    ],
+                  ),
+                ),
+              )),
+            )));
   }
 
   Row getAdditionalInfo(SetModel<GameDetailModel>? data) {
@@ -205,6 +204,7 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                     fontSize: AppValues.size_16,
                     color: Colors.grey)),
             Text(data?.item?.title ?? '',
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: AppValues.size_16,
@@ -218,6 +218,7 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                     fontSize: AppValues.size_16,
                     color: Colors.grey)),
             Text(data?.item?.publisher ?? '',
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: AppValues.size_16,
@@ -231,6 +232,7 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                     fontSize: AppValues.size_16,
                     color: Colors.grey)),
             Text(data?.item?.genre ?? '',
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: AppValues.size_16,
@@ -240,7 +242,8 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
             ),
           ],
         ),
-        Column(
+        Expanded(
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text("Developer",
@@ -249,6 +252,7 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                     fontSize: AppValues.size_16,
                     color: Colors.grey)),
             Text(data?.item?.developer ?? '',
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: AppValues.size_16,
@@ -263,9 +267,11 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                     color: Colors.grey)),
             Text(data?.item?.releaseDate.toString() ?? '',
                 style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: AppValues.size_16,
-                    color: AppColors.whitesmokke)),
+                  fontWeight: FontWeight.bold,
+                  fontSize: AppValues.size_16,
+                  color: AppColors.whitesmokke,
+                  overflow: TextOverflow.ellipsis,
+                )),
             const SizedBox(
               height: AppValues.size_8,
             ),
@@ -275,6 +281,7 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                     fontSize: AppValues.size_16,
                     color: Colors.grey)),
             Text(data?.item?.platform ?? '',
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: AppValues.size_16,
@@ -283,7 +290,7 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
               height: AppValues.size_8,
             ),
           ],
-        ),
+        )),
       ],
     );
   }
