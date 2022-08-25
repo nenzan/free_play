@@ -104,14 +104,13 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
         body: SingleChildScrollView(
           child: Container(
             color: const Color(0xFF313640),
-            constraints: BoxConstraints.tightFor(
-                height: MediaQueryData.fromWindow(window).size.height + 250),
+            height: MediaQuery.of(context).size.height,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
                   child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 1.5,
+                    width: MediaQuery.of(context).size.width / 1.25,
                     child: Text(
                       "\"${viewModel.detailGame?.item?.shortDescription ?? ''}\"",
                       style: const TextStyle(
@@ -129,16 +128,19 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                           fontSize: AppValues.size_20,
                           color: AppColors.whitesmokke)),
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: AppValues.size_16),
-                  child: Text(
-                    viewModel.detailGame?.item?.description ?? '',
-                    style: const TextStyle(
-                        fontStyle: FontStyle.normal,
-                        color: AppColors.whitesmokke),
+                Flexible(
+                    child: SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppValues.size_16),
+                    child: Text(
+                      viewModel.detailGame?.item?.description ?? '',
+                      style: const TextStyle(
+                          fontStyle: FontStyle.normal,
+                          color: AppColors.whitesmokke),
+                    ),
                   ),
-                ),
+                )),
                 const Padding(
                   padding: EdgeInsets.all(AppValues.size_16),
                   child: Text("Additional Information",
@@ -163,11 +165,11 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
                           fontSize: AppValues.size_20,
                           color: AppColors.whitesmokke)),
                 ),
-                Flexible(
+                Expanded(
                     child: GridView.count(
-                  shrinkWrap: true,
                   crossAxisCount: _crossAxisCount,
                   childAspectRatio: _aspectRatio,
+                  shrinkWrap: true,
                   children: List.generate(
                       viewModel.detailGame?.item?.screenshots.length ?? 0,
                       (index) {
@@ -196,13 +198,13 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
             const Text("Title",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: AppValues.size_16,
+                    fontSize: AppValues.size_14,
                     color: Colors.grey)),
             Text(data?.item?.title ?? '',
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: AppValues.size_16,
+                    fontSize: AppValues.size_14,
                     color: AppColors.whitesmokke)),
             const SizedBox(
               height: AppValues.size_16,
@@ -210,13 +212,13 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
             const Text("Publisher",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: AppValues.size_16,
+                    fontSize: AppValues.size_14,
                     color: Colors.grey)),
             Text(data?.item?.publisher ?? '',
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: AppValues.size_16,
+                    fontSize: AppValues.size_14,
                     color: AppColors.whitesmokke)),
             const SizedBox(
               height: AppValues.size_8,
@@ -224,19 +226,22 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
             const Text("Genre",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: AppValues.size_16,
+                    fontSize: AppValues.size_14,
                     color: Colors.grey)),
             Text(data?.item?.genre ?? '',
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: AppValues.size_16,
+                    fontSize: AppValues.size_14,
                     color: AppColors.whitesmokke)),
             const SizedBox(
               height: AppValues.size_8,
             ),
           ],
         )),
+        SizedBox(
+          width: AppValues.size_4,
+        ),
         Expanded(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,13 +249,13 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
             const Text("Developer",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: AppValues.size_16,
+                    fontSize: AppValues.size_14,
                     color: Colors.grey)),
             Text(data?.item?.developer ?? '',
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: AppValues.size_16,
+                    fontSize: AppValues.size_14,
                     color: AppColors.whitesmokke)),
             const SizedBox(
               height: AppValues.size_16,
@@ -258,12 +263,12 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
             const Text("Release Date",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: AppValues.size_16,
+                    fontSize: AppValues.size_14,
                     color: Colors.grey)),
             Text(data?.item?.releaseDate.toString() ?? '',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: AppValues.size_16,
+                  fontSize: AppValues.size_14,
                   color: AppColors.whitesmokke,
                   overflow: TextOverflow.ellipsis,
                 )),
@@ -273,13 +278,13 @@ class _GameDetailScreen extends StatelessView<GameDetailVm> {
             const Text("Platform",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: AppValues.size_16,
+                    fontSize: AppValues.size_14,
                     color: Colors.grey)),
             Text(data?.item?.platform ?? '',
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: AppValues.size_16,
+                    fontSize: AppValues.size_14,
                     color: AppColors.whitesmokke)),
             const SizedBox(
               height: AppValues.size_8,

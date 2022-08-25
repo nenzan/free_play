@@ -45,6 +45,7 @@ class _HomeScreenView extends StatelessView<HomeVm> {
         .toList();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
