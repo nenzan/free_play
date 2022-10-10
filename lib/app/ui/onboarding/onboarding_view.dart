@@ -14,22 +14,50 @@ class OnboardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MVVM<OnboardingVm>(
-        view: () => _OnboardingScreenView(), viewModel: OnboardingVm());
+    return MaterialApp(
+      home: OnboardingScreenView(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
 
-class _OnboardingScreenView extends StatelessView<OnboardingVm> {
+class OnboardingScreenView extends StatefulWidget {
   @override
-  Widget render(BuildContext context, OnboardingVm viewModel) {
+  _OnboardingScreenState createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreenView> {
+  PageController _controller = PageController();
+  int currentIndex = 0;
+
+  onChangedSlide(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PageController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Stack(
           alignment: Alignment.center,
           children: [
             PageView(
-              onPageChanged: viewModel.onChangedFunction,
-              controller: viewModel.pageController,
+              onPageChanged: onChangedSlide,
+              controller: _controller,
               children: const <Widget>[
                 OnboardingPlaceholder(
                     image: AppImages.imgOnboarding1,
@@ -58,21 +86,21 @@ class _OnboardingScreenView extends StatelessView<OnboardingVm> {
                 children: <Widget>[
                   Indicator(
                     positionIndex: 0,
-                    currentIndex: viewModel.currentIndex.value,
+                    currentIndex: currentIndex,
                   ),
                   const SizedBox(
                     width: 10,
                   ),
                   Indicator(
                     positionIndex: 1,
-                    currentIndex: viewModel.currentIndex.value,
+                    currentIndex: currentIndex,
                   ),
                   const SizedBox(
                     width: 10,
                   ),
                   Indicator(
                     positionIndex: 2,
-                    currentIndex: viewModel.currentIndex.value,
+                    currentIndex: currentIndex,
                   ),
                 ],
               ),
@@ -83,17 +111,17 @@ class _OnboardingScreenView extends StatelessView<OnboardingVm> {
               child: Row(
                 children: [
                   Visibility(
-                      visible: viewModel.currentIndex.value > 0 ? true : false,
+                      visible: currentIndex > 0 ? true : false,
                       child: GestureDetector(
                           onTap: () {
-                            if (viewModel.currentIndex.value == 2) {
-                              viewModel.onChangedFunction(1);
-                              viewModel.pageController.animateToPage(1,
+                            if (currentIndex == 2) {
+                              onChangedSlide(1);
+                              _controller.animateToPage(1,
                                   duration: Duration(milliseconds: 500),
                                   curve: Curves.ease);
-                            } else if (viewModel.currentIndex.value == 1) {
-                              viewModel.onChangedFunction(0);
-                              viewModel.pageController.animateToPage(0,
+                            } else if (currentIndex == 1) {
+                              onChangedSlide(0);
+                              _controller.animateToPage(0,
                                   duration: Duration(milliseconds: 500),
                                   curve: Curves.ease);
                             }
@@ -109,14 +137,14 @@ class _OnboardingScreenView extends StatelessView<OnboardingVm> {
                   ),
                   GestureDetector(
                       onTap: () {
-                        if (viewModel.currentIndex.value == 0) {
-                          viewModel.onChangedFunction(1);
-                          viewModel.pageController.animateToPage(1,
+                        if (currentIndex == 0) {
+                          onChangedSlide(1);
+                          _controller.animateToPage(1,
                               duration: Duration(milliseconds: 500),
                               curve: Curves.ease);
-                        } else if (viewModel.currentIndex.value == 1) {
-                          viewModel.onChangedFunction(2);
-                          viewModel.pageController.animateToPage(2,
+                        } else if (currentIndex == 1) {
+                          onChangedSlide(2);
+                          _controller.animateToPage(2,
                               duration: Duration(milliseconds: 500),
                               curve: Curves.ease);
                         } else {
@@ -127,7 +155,7 @@ class _OnboardingScreenView extends StatelessView<OnboardingVm> {
                         }
                       },
                       child: Text(
-                        viewModel.currentIndex.value == 2 ? 'Finish' : 'Next',
+                        currentIndex == 2 ? 'Finish' : 'Next',
                         style: GoogleFonts.signika(
                             fontSize: AppValues.size_16,
                             color: AppColors.mainColor),
