@@ -55,7 +55,7 @@ class _HomeScreenView extends StatelessView<HomeVm> {
               snap: false,
               centerTitle: false,
               backgroundColor: const Color(0xFF313640),
-              title: const Text('Free Play'),
+              title: const Text('Free Play!'),
               actions: [
                 Container(
                   width: 200,
